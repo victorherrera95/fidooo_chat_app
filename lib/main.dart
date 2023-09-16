@@ -55,9 +55,9 @@ class MyAppLoggedIn extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: HomePage(userModel: userModel, firebaseUser: firebaseUser),
+      home: SignUpPage(),
     );
   }
 }
