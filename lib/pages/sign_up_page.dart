@@ -92,25 +92,20 @@ class _SignUpPageState extends State<SignUpPage> {
 
     if (credential != null) {
       String uid = credential.user!.uid;
-      UserModel newUser = UserModel(
-          uid: uid, 
-          email: email, 
-          fullname: "", 
-          profilepicture: ""
-          );
+      UserModel newUser =
+          UserModel(uid: uid, email: email, fullname: "", profilepicture: "");
       await FirebaseFirestore.instance
           .collection("users")
           .doc(uid)
           .set(newUser.toMap())
           .then((value) {
-            Navigator.push(
-              context, 
-              MaterialPageRoute(
-                builder: (context) {
-                  return CompleteProfilePage(
-                   userModel: newUser, firebaseUser: credential!.user!);
-        }
-        ),
+        Navigator.popUntil(context, (route) => route.isFirst);
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) {
+            return CompleteProfilePage(
+                userModel: newUser, firebaseUser: credential!.user!);
+          }),
         );
       });
     }
