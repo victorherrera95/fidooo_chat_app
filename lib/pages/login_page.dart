@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fidooo_chat_app/models/user_model.dart';
+import 'package:fidooo_chat_app/pages/home_page.dart';
 import 'package:fidooo_chat_app/pages/sign_up_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -48,7 +49,7 @@ class _LoginPageState extends State<LoginPage> {
 
     try {
       credential = await FirebaseAuth.instance
-          .createUserWithEmailAndPassword(email: email, password: password);
+          .signInWithEmailAndPassword(email: email, password: password);
     } on FirebaseAuthException catch (err) {
       showDialog(
         context: context,
@@ -77,7 +78,16 @@ class _LoginPageState extends State<LoginPage> {
       UserModel userModel =
           UserModel.fromMap(userData.data() as Map<String, dynamic>);
 
-      print("Log in successful");
+     
+      // ignore: use_build_context_synchronously
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) {
+          return HomePage(
+              userModel: userModel, 
+              firebaseUser: credential!.user!);
+        }),
+      );
     }
   }
 
@@ -123,7 +133,7 @@ class _LoginPageState extends State<LoginPage> {
                 onPressed: () {
                   checkValuesLogIn();
                 },
-                child: const Text("Acceder"),
+                child: const Text("Iniciar Sesion"),
               )
             ],
           )),

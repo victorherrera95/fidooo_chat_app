@@ -68,7 +68,8 @@ class _SignUpPageState extends State<SignUpPage> {
     UserCredential? credential;
 
     try {
-      credential = await FirebaseAuth.instance.createUserWithEmailAndPassword(email: email, password: password);
+      credential = await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(email: email, password: password);
     } on FirebaseAuthException catch (err) {
       showDialog(
         context: context,
@@ -89,37 +90,31 @@ class _SignUpPageState extends State<SignUpPage> {
       );
     }
 
-    if(credential != null) {
+    if (credential != null) {
       String uid = credential.user!.uid;
       UserModel newUser = UserModel(
-        uid : uid,
-        email: email,
-        fullname: "",
-        profilepicture: ""
-      );
-      await FirebaseFirestore.instance.collection("users").doc(uid).set(
-        newUser.toMap()).then((value) {
-          showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: const Text('Nuevo Usuario Creado'),
-            actions: [
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: const Text('OK'),
-              ),
-            ],
+          uid: uid, 
+          email: email, 
+          fullname: "", 
+          profilepicture: ""
           );
-        },
-      );
-        });
+      await FirebaseFirestore.instance
+          .collection("users")
+          .doc(uid)
+          .set(newUser.toMap())
+          .then((value) {
+            Navigator.push(
+              context, 
+              MaterialPageRoute(
+                builder: (context) {
+                  return CompleteProfilePage(
+                   userModel: newUser, firebaseUser: credential!.user!);
+        }
+        ),
+        );
+      });
     }
-
   }
-  
 
   @override
   Widget build(BuildContext context) {
@@ -153,7 +148,8 @@ class _SignUpPageState extends State<SignUpPage> {
               TextField(
                 controller: passwordController,
                 obscureText: true,
-                decoration: const InputDecoration(labelText: "Contraseña (minimo 6 caracteres)"),
+                decoration: const InputDecoration(
+                    labelText: "Contraseña (minimo 6 caracteres)"),
               ),
               const SizedBox(
                 height: 10,
